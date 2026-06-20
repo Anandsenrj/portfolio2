@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anand Sen RJ — AI for Sustainability</title>
+<meta name="description" content="Anand Sen RJ builds AI tools that help energy behave — forecasting, RAG, and agentic systems for a lighter carbon footprint.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --ink:#15181A;
+    --ink-soft:#5B6158;
+    --ink-faint:#90948D;
+    --emerald:#1B6E48;
+    --emerald-dark:#13522F;
+    --emerald-soft:#E6F1E9;
+    --amber:#E8A33D;
+    --amber-soft:#FBEFDA;
+    --line:#E5E2D8;
+    --card:#FFFFFF;
+    --shadow-sm: 0 1px 2px rgba(21,24,26,.05);
+    --shadow-md: 0 16px 32px -18px rgba(21,24,26,.18);
+    --radius-lg: 26px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --maxw: 1180px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; margin:0; padding:0; }
+  h1,h2,h3{ margin:0; font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  section{ scroll-margin-top:90px; }
+
+  *:focus-visible{ outline:2px solid var(--emerald); outline-offset:3px; border-radius:4px; }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--emerald-dark);
+  }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+
+  /* ---------- background atmosphere ---------- */
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(70px);
+    z-index:0;
+    pointer-events:none;
+  }
+  .blob-1{ width:480px; height:480px; top:-160px; right:-120px; background:radial-gradient(circle, rgba(232,163,61,.35), transparent 70%); }
+  .blob-2{ width:520px; height:520px; top:60px; left:-220px; background:radial-gradient(circle, rgba(27,110,72,.22), transparent 70%); }
+
+  /* ---------- scroll progress ---------- */
+  .progress-bar{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--amber), var(--emerald));
+    z-index:100;
+  }
+
+  /* ---------- nav ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,247,.78);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease, box-shadow .3s ease, background .3s ease, transform .35s ease;
+  }
+  header.nav.scrolled{
+    border-color:var(--line);
+    box-shadow:var(--shadow-sm);
+    background:rgba(250,250,247,.92);
+  }
+  header.nav.nav-hidden{ transform:translateY(-100%); }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 32px;
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+  }
+  .logo{
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.12rem;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{ width:7px; height:7px; border-radius:50%; background:var(--amber); display:inline-block; }
+  .nav-links{ display:flex; gap:30px; font-size:.92rem; color:var(--ink-soft); }
+  .nav-links a{ position:relative; transition:color .15s ease; padding-bottom:3px; }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; right:100%; bottom:0; height:2px;
+    background:var(--emerald); border-radius:2px; transition:right .25s ease;
+  }
+  .nav-links a.active{ color:var(--ink); }
+  .nav-links a.active::after{ right:0; }
+  .nav-cta{ display:flex; gap:10px; align-items:center; }
+
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:.88rem;
+    padding:10px 18px; border-radius:999px; display:inline-flex; align-items:center; gap:7px;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    white-space:nowrap; border:1.5px solid transparent; cursor:pointer;
+  }
+  .btn svg{ width:14px; height:14px; flex:none; }
+  .btn-solid{ background:var(--emerald); color:#fff; box-shadow:var(--shadow-sm); }
+  .btn-solid:hover{ background:var(--emerald-dark); transform:translateY(-1px); }
+  .btn-outline{ border-color:rgba(21,24,26,.16); color:var(--ink); background:#fff; }
+  .btn-outline:hover{ border-color:rgba(21,24,26,.32); transform:translateY(-1px); }
+  .btn-ghost{ color:var(--ink-soft); padding:10px 6px; }
+  .btn-ghost:hover{ color:var(--ink); }
+
+  @media (max-width:880px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; padding:88px 0 70px; overflow:hidden;
+  }
+  .cursor-glow{
+    position:absolute; width:380px; height:380px; border-radius:50%;
+    pointer-events:none; z-index:0; opacity:0;
+    background:radial-gradient(circle, rgba(232,163,61,.16), transparent 70%);
+    transform:translate(-50%,-50%);
+    transition:opacity .35s ease;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center;
+    position:relative; z-index:1;
+  }
+  .hero-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--line); border-radius:999px;
+    padding:7px 14px 7px 10px; font-family:'IBM Plex Mono',monospace; font-size:.74rem;
+    color:var(--ink-soft); margin-bottom:22px; box-shadow:var(--shadow-sm);
+  }
+  .pulse{
+    width:7px; height:7px; border-radius:50%; background:var(--amber); flex:none;
+    box-shadow:0 0 0 0 rgba(232,163,61,.6);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(232,163,61,.55); }
+    70%{ box-shadow:0 0 0 7px rgba(232,163,61,0); }
+    100%{ box-shadow:0 0 0 0 rgba(232,163,61,0); }
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 4.6vw, 3.7rem);
+    line-height:1.06;
+    color:var(--ink);
+  }
+  .hero h1 em{ font-style:italic; font-weight:500; color:var(--emerald-dark); }
+  .hl-line{
+    display:block; opacity:0; transform:translateY(28px);
+    animation:lineUp .85s cubic-bezier(.22,.84,.32,1) forwards;
+  }
+  .hl-line:nth-child(1){ animation-delay:.08s; }
+  .hl-line:nth-child(2){ animation-delay:.22s; }
+  @keyframes lineUp{ to{ opacity:1; transform:none; } }
+  .hero p.lead{
+    margin-top:22px; font-size:1.08rem; line-height:1.65; color:var(--ink-soft);
+    max-width:480px;
+  }
+  .hero-actions{ display:flex; gap:12px; margin-top:32px; flex-wrap:wrap; }
+  .hero-actions .btn{ padding:13px 22px; font-size:.94rem; }
+
+  .stat-row{
+    display:flex; gap:0; margin-top:48px; flex-wrap:wrap;
+  }
+  .stat-item{
+    padding-right:28px; margin-right:28px; border-right:1px solid var(--line);
+  }
+  .stat-item:last-child{ border-right:none; margin-right:0; padding-right:0; }
+  .stat-num{ font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; color:var(--ink); }
+  .stat-label{ font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+
+  /* floating dashboard card */
+  .hero-visual{ position:relative; height:420px; perspective:1100px; }
+  .card-back{
+    position:absolute; width:300px; height:300px; right:14px; top:30px;
+    background:linear-gradient(160deg, var(--amber-soft), var(--emerald-soft));
+    border-radius:var(--radius-lg);
+    transform:rotate(-7deg);
+    border:1px solid var(--line);
+  }
+  .dash-card{
+    position:absolute; width:340px; right:0; top:0;
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-md);
+    padding:22px;
+    transform:rotate(2.5deg);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+  .hero-visual:hover .dash-card{ transform:rotate(0deg) translateY(-4px); }
+  .dash-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .dash-dots{ display:flex; gap:5px; }
+  .dash-dots span{ width:8px; height:8px; border-radius:50%; background:var(--line); }
+  .dash-label{ font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--ink-faint); }
+  .dash-title{ font-family:'Fraunces',serif; font-size:1.08rem; font-weight:600; margin-bottom:18px; }
+  .dash-stats{ display:flex; gap:18px; margin-bottom:18px; }
+  .dash-stat-num{ font-family:'Fraunces',serif; font-size:1.7rem; font-weight:600; color:var(--emerald-dark); }
+  .dash-stat-label{ font-size:.7rem; color:var(--ink-faint); margin-top:2px; }
+  .bars{ display:flex; align-items:flex-end; gap:6px; height:64px; margin-bottom:16px; }
+  .bars span{
+    flex:1; border-radius:4px 4px 0 0;
+    background:linear-gradient(180deg, var(--amber), var(--emerald));
+    transform-origin:bottom; transform:scaleY(0);
+    animation:grow .8s ease forwards;
+  }
+  @keyframes grow{ to{ transform:scaleY(1); } }
+  .dash-foot{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--ink-faint); border-top:1px solid var(--line); padding-top:12px; }
+
+  @media (max-width:880px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ height:340px; margin-top:10px; }
+    .dash-card, .card-back{ position:relative; right:auto; top:auto; margin:0 auto; }
+    .card-back{ display:none; }
+  }
+
+  /* ---------- section shared ---------- */
+  .section{ padding:84px 0; }
+  .section-head{ max-width:640px; margin-bottom:44px; }
+  .section-head h2{ font-size:clamp(1.8rem,3vw,2.4rem); margin-top:10px; }
+  .section-head h2 em{ font-style:italic; color:var(--emerald-dark); font-weight:500; }
+  .section-head p{ margin-top:14px; color:var(--ink-soft); font-size:1.02rem; line-height:1.6; }
+
+  /* ---------- featured project ---------- */
+  .featured{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:52px;
+    display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+    box-shadow:var(--shadow-sm);
+  }
+  .featured-tags{ display:flex; flex-wrap:wrap; gap:8px; margin:22px 0 26px; }
+  .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.02em;
+    background:var(--emerald-soft); color:var(--emerald-dark);
+    padding:6px 12px; border-radius:999px; border:1px solid rgba(27,110,72,.14);
+  }
+  .featured h3{ font-size:1.9rem; margin-top:6px; }
+  .featured p.desc{ margin-top:14px; color:var(--ink-soft); line-height:1.65; font-size:1rem; }
+  .featured-actions{ display:flex; gap:12px; margin-top:8px; }
+
+  .flow{
+    display:flex; flex-direction:column; gap:0; background:linear-gradient(160deg, var(--emerald-soft), #fff 60%);
+    border:1px solid var(--line); border-radius:var(--radius-md); padding:26px;
+  }
+  .flow-step{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:14px 16px; box-shadow:var(--shadow-sm);
+  }
+  .flow-step .ft{ font-family:'Fraunces',serif; font-weight:600; font-size:.96rem; }
+  .flow-step .fs{ font-size:.78rem; color:var(--ink-faint); margin-top:3px; }
+  .flow-arrow{ display:flex; justify-content:center; padding:8px 0; color:var(--amber); }
+
+  @media (max-width:880px){
+    .featured{ grid-template-columns:1fr; padding:32px; }
+  }
+
+  /* ---------- projects grid ---------- */
+  .projects-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px;
+  }
+  .pcard{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:26px; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    display:flex; flex-direction:column; height:100%;
+  }
+  .pcard:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:rgba(21,24,26,.12); }
+  .pcard-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .pcard-lang{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--ink-faint); text-transform:uppercase; }
+  .pcard h4{ font-family:'Fraunces',serif; font-weight:600; font-size:1.18rem; margin:0 0 8px; }
+  .pcard p{ color:var(--ink-soft); font-size:.92rem; line-height:1.55; flex:1; }
+  .pcard-link{ display:flex; align-items:center; gap:6px; font-size:.84rem; font-weight:600; color:var(--emerald-dark); margin-top:16px; }
+  .pcard-link svg{ width:13px; height:13px; }
+  .fork-note{ font-size:.7rem; color:var(--ink-faint); margin-top:4px; }
+
+  /* ---------- stack ---------- */
+  .marquee{
+    overflow:hidden; width:100%;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track{
+    display:flex; gap:12px; width:max-content;
+    animation:marquee-scroll 28s linear infinite;
+  }
+  .marquee:hover .marquee-track{ animation-play-state:paused; }
+  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .chip{
+    background:#fff; border:1px solid var(--line); border-radius:999px;
+    padding:10px 18px; font-size:.88rem; font-weight:500; color:var(--ink);
+    display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-sm);
+    flex:none;
+  }
+  .chip .sw{ width:8px; height:8px; border-radius:50%; background:var(--emerald); }
+  .chip.amber .sw{ background:var(--amber); }
+
+  /* ---------- about ---------- */
+  .about{
+    display:grid; grid-template-columns:.7fr 1.3fr; gap:48px; align-items:center;
+  }
+  .about-photo{
+    width:100%; aspect-ratio:1/1; border-radius:var(--radius-lg);
+    overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow-md);
+    background:var(--emerald-soft);
+  }
+  .about-photo img{ width:100%; height:100%; object-fit:cover; }
+  .about-body p{ color:var(--ink-soft); line-height:1.7; font-size:1.02rem; margin-bottom:16px; }
+  .about-facts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:24px; }
+  .fact{ border-top:1px solid var(--line); padding-top:12px; }
+  .fact-label{ font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; }
+  .fact-value{ font-size:.94rem; margin-top:4px; font-weight:500; }
+
+  @media (max-width:880px){
+    .about{ grid-template-columns:1fr; }
+    .about-photo{ max-width:240px; }
+  }
+
+  /* ---------- cta ---------- */
+  .cta-panel{
+    position:relative; overflow:hidden;
+    background:linear-gradient(135deg, var(--emerald-dark), var(--emerald) 60%, var(--amber));
+    border-radius:var(--radius-lg);
+    padding:64px 52px;
+    color:#fff; text-align:center;
+  }
+  .cta-panel h2{ color:#fff; font-size:clamp(1.8rem,3.4vw,2.6rem); }
+  .cta-panel h2 em{ color:var(--amber-soft); font-style:italic; font-weight:500; }
+  .cta-panel p{ color:rgba(255,255,255,.85); max-width:480px; margin:16px auto 30px; font-size:1.02rem; }
+  .cta-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .cta-panel .btn-solid{ background:#fff; color:var(--emerald-dark); }
+  .cta-panel .btn-solid:hover{ background:#fff; opacity:.92; }
+  .cta-panel .btn-outline{ background:transparent; border-color:rgba(255,255,255,.5); color:#fff; }
+  .cta-panel .btn-outline:hover{ border-color:#fff; }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:36px 0; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-links{ display:flex; gap:22px; font-size:.86rem; color:var(--ink-soft); }
+  .footer-links a:hover{ color:var(--ink); }
+  .footer-copy{ font-size:.8rem; color:var(--ink-faint); }
+  .social-icons{ display:flex; gap:14px; }
+  .social-icons a{ color:var(--ink-soft); transition:color .15s ease; }
+  .social-icons a:hover{ color:var(--ink); }
+  .social-icons svg{ width:18px; height:18px; }
+
+  /* reveal */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+  }
+
+  @media (max-width:560px){
+    .wrap{ padding:0 20px; }
+    .featured{ padding:24px; }
+    .cta-panel{ padding:44px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="blob blob-1" id="blob1"></div>
+<div class="blob blob-2" id="blob2"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="dot"></span>Anand Sen</a>
+    <nav class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#stack">Stack</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-outline" href="https://github.com/Anandsenrj" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.09 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.07.78 2.15 0 1.55-.01 2.81-.01 3.19 0 .31.21.67.8.56C20.21 21.38 23.5 17.07 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-solid" href="https://www.linkedin.com/in/Anandsenrj" target="_blank" rel="noopener">
+        Let's connect
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap" id="heroSection">
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="hero-grid">
+      <div class="reveal in">
+        <div class="hero-tag"><span class="pulse"></span>1M1B AI for Sustainability · IBM SkillsBuild × AICTE</div>
+        <h1>
+          <span class="hl-line">Energy forecasting.</span>
+          <span class="hl-line">Carbon <em>clarity.</em></span>
+        </h1>
+        <p class="lead">I'm Anand Sen RJ — a student in India building AI tools that help SMEs and campuses see their energy use clearly, forecast what's coming, and shrink their carbon footprint along the way.</p>
+        <div class="hero-actions">
+          <a href="#work" class="btn btn-solid">Explore the work
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <a href="https://github.com/Anandsenrj" target="_blank" rel="noopener" class="btn btn-outline">View GitHub
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item"><div class="stat-num">19+</div><div class="stat-label">Repositories</div></div>
+          <div class="stat-item"><div class="stat-num">SDG 7 · 13</div><div class="stat-label">Focus areas</div></div>
+          <div class="stat-item"><div class="stat-num">Granite</div><div class="stat-label">Core LLM stack</div></div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal in" id="heroVisual">
+        <div class="card-back"></div>
+        <div class="dash-card" id="dashCard">
+          <div class="dash-top">
+            <div class="dash-dots"><span></span><span></span><span></span></div>
+            <div class="dash-label">smartenergy-ai · live preview</div>
+          </div>
+          <div class="dash-title">Campus Energy Forecast</div>
+          <div class="dash-stats">
+            <div>
+              <div class="dash-stat-num" data-count="94" data-suffix="%">0%</div>
+              <div class="dash-stat-label">Forecast accuracy</div>
+            </div>
+            <div>
+              <div class="dash-stat-num" data-count="12.4" data-suffix="t" data-decimal="1">0t</div>
+              <div class="dash-stat-label">CO₂e saved / mo</div>
+            </div>
+          </div>
+          <div class="bars">
+            <span style="height:38%; animation-delay:.05s"></span>
+            <span style="height:62%; animation-delay:.1s"></span>
+            <span style="height:48%; animation-delay:.15s"></span>
+            <span style="height:80%; animation-delay:.2s"></span>
+            <span style="height:55%; animation-delay:.25s"></span>
+            <span style="height:90%; animation-delay:.3s"></span>
+            <span style="height:70%; animation-delay:.35s"></span>
+          </div>
+          <div class="dash-foot">Powered by IBM Granite LLM + RAG</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECT -->
+  <section class="section wrap" id="work">
+    <div class="section-head reveal">
+      <span class="eyebrow">Flagship project</span>
+      <h2>SmartEnergy AI</h2>
+      <p>An AI-powered energy forecasting and carbon footprint advisor — built for SMEs and campuses across India, and submitted as the capstone for the 1M1B AI for Sustainability internship.</p>
+    </div>
+
+    <div class="featured reveal">
+      <div>
+        <span class="eyebrow">SDG 7 · Affordable & Clean Energy — SDG 13 · Climate Action</span>
+        <h3>Turning raw consumption data into action</h3>
+        <p class="desc">SmartEnergy AI reads in energy usage patterns and turns them into forecasts and plain-language carbon advice. Underneath it pairs IBM's Granite LLM with a retrieval-augmented pipeline and agentic workflows, so the system doesn't just predict — it reasons over context and recommends what to change.</p>
+        <div class="featured-tags">
+          <span class="tag">IBM Granite LLM</span>
+          <span class="tag">RAG</span>
+          <span class="tag">Agentic Workflows</span>
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">Web Prototype</span>
+        </div>
+        <div class="featured-actions">
+          <a class="btn btn-solid" href="https://github.com/Anandsenrj/smartenergy-ai" target="_blank" rel="noopener">
+            View repository
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="ft">Energy &amp; usage data</div>
+          <div class="fs">Consumption logs, sensor readings, utility bills</div>
+        </div>
+        <div class="flow-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+        <div class="flow-step">
+          <div class="ft">Granite LLM + RAG</div>
+          <div class="fs">Agentic reasoning grounded in retrieved context</div>
+        </div>
+        <div class="flow-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+        <div class="flow-step">
+          <div class="ft">Forecast + carbon advice</div>
+          <div class="fs">Plain-language recommendations, ready to act on</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OTHER PROJECTS -->
+  <section class="section wrap" id="projects">
+    <div class="section-head reveal">
+      <span class="eyebrow">From the archive</span>
+      <h2>Earlier <em>builds</em> &amp; experiments</h2>
+      <p>Before AI and sustainability, there was a lot of learning by building. A few of the repos that trace that path.</p>
+    </div>
+
+    <div class="projects-grid">
+      <div class="pcard reveal">
+        <div class="pcard-top"><span class="pcard-lang">HTML</span></div>
+        <h4>Pollution</h4>
+        <p>A front-end project visualizing pollution data — an early step toward the environmental focus his work has now.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj/Pollution" target="_blank" rel="noopener">View repo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-top"><span class="pcard-lang">HTML</span></div>
+        <h4>Plagiarism</h4>
+        <p>A tool for checking text similarity and flagging duplicated content.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj/plagiarism" target="_blank" rel="noopener">View repo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-top"><span class="pcard-lang">Python</span></div>
+        <h4>Age Detection</h4>
+        <p>A computer-vision project estimating age from images.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj/Age-Detection" target="_blank" rel="noopener">View repo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+        <div class="fork-note">Forked from KingArnaiz/Age-Detection</div>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-top"><span class="pcard-lang">Sandbox</span></div>
+        <h4>Experiment</h4>
+        <p>A running sandbox repo for trying out new ideas, snippets, and approaches.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj/experiment" target="_blank" rel="noopener">View repo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-top"><span class="pcard-lang">JavaScript</span></div>
+        <h4>Game</h4>
+        <p>A simple browser game built while learning front-end fundamentals.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj/game" target="_blank" rel="noopener">View repo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="pcard reveal" style="background:linear-gradient(160deg, var(--emerald-soft), #fff); border-style:dashed;">
+        <div class="pcard-top"><span class="pcard-lang">All repos</span></div>
+        <h4>19 repositories total</h4>
+        <p>See everything — including in-progress work not listed here — on GitHub.</p>
+        <a class="pcard-link" href="https://github.com/Anandsenrj?tab=repositories" target="_blank" rel="noopener">Browse full list
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section class="section wrap" id="stack">
+    <div class="section-head reveal">
+      <span class="eyebrow">Toolkit</span>
+      <h2>Built with a <em>practical</em> stack</h2>
+      <p>From front-end fundamentals to the AI layer SmartEnergy AI runs on.</p>
+    </div>
+    <div class="marquee reveal" id="stackMarquee">
+      <div class="marquee-track" id="stackTrack">
+        <div class="chip"><span class="sw"></span>HTML &amp; CSS</div>
+        <div class="chip"><span class="sw"></span>JavaScript</div>
+        <div class="chip"><span class="sw"></span>Python</div>
+        <div class="chip amber"><span class="sw"></span>IBM Granite LLM</div>
+        <div class="chip amber"><span class="sw"></span>Retrieval-Augmented Generation</div>
+        <div class="chip amber"><span class="sw"></span>Agentic Workflows</div>
+        <div class="chip amber"><span class="sw"></span>Prompt Engineering</div>
+        <div class="chip"><span class="sw"></span>Git &amp; GitHub</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section wrap" id="about">
+    <div class="about">
+      <div class="about-photo reveal">
+        <img src="https://avatars.githubusercontent.com/u/84634909?v=4" alt="Anand Sen RJ" loading="lazy">
+      </div>
+      <div class="about-body reveal">
+        <span class="eyebrow">About</span>
+        <h2 style="margin-top:10px; font-size:1.9rem;">Stay hungry, <em>stay foolish.</em></h2>
+        <p>I'm a student based in India with a growing focus on AI applications for sustainability — especially where energy and climate challenges meet practical software. Right now that means SmartEnergy AI, my capstone for the 1M1B AI for Sustainability Virtual Internship, run in partnership with IBM SkillsBuild and AICTE.</p>
+        <p>Outside of that, most of my GitHub is a record of learning in public — small front-end builds, a computer-vision experiment, and a few sandboxes for trying things out.</p>
+        <div class="about-facts">
+          <div class="fact"><div class="fact-label">Location</div><div class="fact-value">India</div></div>
+          <div class="fact"><div class="fact-label">Program</div><div class="fact-value">1M1B × IBM SkillsBuild</div></div>
+          <div class="fact"><div class="fact-label">Focus</div><div class="fact-value">AI for sustainability</div></div>
+          <div class="fact"><div class="fact-label">GitHub</div><div class="fact-value">@Anandsenrj</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section wrap">
+    <div class="cta-panel reveal">
+      <h2>Let's build something <em>lighter</em> on the planet.</h2>
+      <p>Open to internships, collaborations, and conversations about AI, sustainability, or both at once.</p>
+      <div class="cta-actions">
+        <a class="btn btn-solid" href="https://www.linkedin.com/in/Anandsenrj" target="_blank" rel="noopener">Connect on LinkedIn</a>
+        <a class="btn btn-outline" href="https://github.com/Anandsenrj" target="_blank" rel="noopener">See the code</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-copy">© 2026 Anand Sen RJ. Built with intent, not a template.</div>
+    <div class="footer-links">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="social-icons">
+      <a href="https://github.com/Anandsenrj" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.09 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.07.78 2.15 0 1.55-.01 2.81-.01 3.19 0 .31.21.67.8.56C20.21 21.38 23.5 17.07 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/Anandsenrj" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold:.15 });
+  reveals.forEach(el=>io.observe(el));
+
+  // count-up for dashboard stats
+  const counters = document.querySelectorAll('[data-count]');
+  const co = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const decimals = el.dataset.decimal ? parseInt(el.dataset.decimal) : 0;
+      const duration = reduceMotion ? 0 : 1100;
+      const start = performance.now();
+      function tick(now){
+        const p = duration ? Math.min(1, (now-start)/duration) : 1;
+        const eased = 1 - Math.pow(1-p, 3);
+        const val = (target*eased).toFixed(decimals);
+        el.textContent = val + suffix;
+        if(p<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      co.unobserve(el);
+    });
+  }, { threshold:.4 });
+  counters.forEach(el=>co.observe(el));
+
+  // ---------- nav: scrolled state, hide-on-scroll-down, scroll progress, parallax blobs ----------
+  const navEl = document.querySelector('header.nav');
+  const progressBar = document.getElementById('progressBar');
+  const blob1 = document.getElementById('blob1');
+  const blob2 = document.getElementById('blob2');
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function onScroll(){
+    const y = window.scrollY;
+    navEl.classList.toggle('scrolled', y > 30);
+    if(!reduceMotion){
+      if(y > lastY && y > 140){ navEl.classList.add('nav-hidden'); }
+      else{ navEl.classList.remove('nav-hidden'); }
+      blob1.style.transform = `translate3d(0, ${y*0.06}px, 0)`;
+      blob2.style.transform = `translate3d(0, ${y*-0.04}px, 0)`;
+    }
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (max > 0 ? (y/max*100) : 0) + '%';
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){ requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive:true });
+  onScroll();
+
+  // ---------- active nav link tracking ----------
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const navIO = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = '#' + entry.target.id;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin:'-40% 0px -50% 0px', threshold:0 });
+  sections.forEach(s => navIO.observe(s));
+
+  if(!reduceMotion){
+    // ---------- cursor glow in hero ----------
+    const heroSection = document.getElementById('heroSection');
+    const cursorGlow = document.getElementById('cursorGlow');
+    heroSection.addEventListener('mousemove', (e)=>{
+      const r = heroSection.getBoundingClientRect();
+      cursorGlow.style.opacity = '1';
+      cursorGlow.style.left = (e.clientX - r.left) + 'px';
+      cursorGlow.style.top = (e.clientY - r.top) + 'px';
+    });
+    heroSection.addEventListener('mouseleave', ()=>{ cursorGlow.style.opacity = '0'; });
+
+    // ---------- 3D tilt on dashboard card ----------
+    const heroVisual = document.getElementById('heroVisual');
+    const dashCard = document.getElementById('dashCard');
+    heroVisual.addEventListener('mousemove', (e)=>{
+      const r = heroVisual.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      dashCard.style.transform = `translateY(-4px) rotate(${2.5 - px*9}deg) rotateX(${py*-9}deg) rotateY(${px*9}deg)`;
+    });
+    heroVisual.addEventListener('mouseleave', ()=>{ dashCard.style.transform = ''; });
+
+    // ---------- magnetic buttons ----------
+    document.querySelectorAll('.btn').forEach((btn)=>{
+      btn.addEventListener('mousemove', (e)=>{
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width/2) * .22;
+        const y = (e.clientY - r.top - r.height/2) * .35;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      btn.addEventListener('mouseleave', ()=>{ btn.style.transform = ''; });
+    });
+  }
+
+  // ---------- marquee: duplicate chips for a seamless loop ----------
+  const track = document.getElementById('stackTrack');
+  if(track){ track.innerHTML += track.innerHTML; }
+</script>
+
+</body>
+</html>
